@@ -27,8 +27,8 @@ public class UserService{
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id, User user) {
-        if (userRepository.existsById(id)) {
+    public User updateUser(User user) {
+        if (userRepository.existsById(user.getId())) {
             return userRepository.save(user);
         }
         return null;

@@ -2,14 +2,11 @@ package com.lucas.lucas.model;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "user")
-@Getter
-@Setter
+@Builder
 @Data
 public class User {
 
@@ -19,59 +16,11 @@ public class User {
 
     private String name;
     private String last_name;
-    @Column(unique = true)
+    @Column(nullable = false)
+    private String password;
+    @Column(unique = true, nullable = false)
     private String email;
-
-    private String tel;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private String tel;
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class UserController {
         }
 
        try {
-           User user = new User();
+          /* User user = new User();
            user.setName(userDTO.getName());
            user.setLast_name(userDTO.getLastName());
            user.setEmail(userDTO.getEmail());
@@ -49,14 +49,14 @@ public class UserController {
            //Check if email exists
            Optional<User> email = userService.getUserByEmail(userDTO.getEmail());
             if (email.isPresent()) {
-                return ErrorResponseUtil.handleErrorResponse("Ya existe un email registrado",HttpStatus.CONFLICT );
+                return ErrorResponseUtil.handleErrorResponse("Ya existe un email registrado",HttpStatus.CONFLICT);
             }
 
-           User createdUser = userService.createUser(user);
+           User createdUser = userService.createUser(user);*/
 
            Map<String, Object> response = new HashMap<>();
            response.put("message", "User created successfully");
-           response.put("user", createdUser);
+          // response.put("user", createdUser);
 
            return new ResponseEntity<>(response, HttpStatus.CREATED);
        } catch (Exception e) {
@@ -65,8 +65,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
+        Optional<User> existingUserOptional = userService.getUserById(id);
+        System.out.println(existingUserOptional.isPresent());
+
+
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            existingUser.setName(user.getName());
+            existingUser.setLast_name(user.getLast_name());
+            existingUser.setTel(user.getTel());
+            existingUser.setRole(user.getRole());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User updated successfully");
+            response.put("user", existingUser);
+            userService.updateUser(existingUser);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } else {
+            return ErrorResponseUtil.handleErrorResponse("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
